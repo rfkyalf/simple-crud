@@ -16,10 +16,10 @@ export function CreateButton() {
   );
 }
 
-export function EditButton() {
+export function EditButton({ id }: { id: string }) {
   return (
     <>
-      <Link href="/contact/create" className="rounded-sm border p-1 hover:bg-gray-100">
+      <Link href={`/contact/edit/${id}`} className="rounded-sm border p-1 hover:bg-gray-100">
         <IoPencil size={20} />
       </Link>
     </>

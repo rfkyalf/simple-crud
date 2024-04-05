@@ -24,7 +24,7 @@ export default async function ContactTable() {
               <td className="px-6 py-3">{contact.phoneNumber}</td>
               <td className="px-6 py-3">{formatDate(contact.createdAt.toString())}</td>
               <td className="flex justify-center gap-1 py-3">
-                <EditButton />
+                <EditButton id={contact.id} />
                 <DeleteButton />
               </td>
             </tr>

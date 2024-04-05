@@ -32,3 +32,27 @@ export async function createContact(prevState: any, formData: FormData) {
   revalidatePath('/contact');
   redirect('/contact');
 }
+
+export async function updateContact(id: string, prevState: any, formData: FormData) {
+  const validatedFields = contactSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { error: validatedFields.error.flatten().fieldErrors };
+  }
+
+  try {
+    // Upate kontak baru dalam database menggunakan Prisma
+    await prisma.contact.update({
+      data: {
+        name: validatedFields.data.name,
+        phoneNumber: validatedFields.data.phoneNumber,
+      },
+      where: { id },
+    });
+  } catch (error) {
+    return { message: 'Failed to update contact' };
+  }
+
+  revalidatePath('/contact');
+  redirect('/contact');
+}
