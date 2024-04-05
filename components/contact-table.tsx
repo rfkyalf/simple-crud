@@ -1,9 +1,15 @@
-import { getContact } from '@/lib/data';
-import { formatDate } from '@/lib/utils';
-import { DeleteButton, EditButton } from './button';
+import { getContact } from "@/lib/data";
+import { formatDate } from "@/lib/utils";
+import { DeleteButton, EditButton } from "./button";
 
-export default async function ContactTable() {
-  const contacts = await getContact();
+export default async function ContactTable({
+  query,
+  currentPage,
+}: {
+  query: string;
+  currentPage: number;
+}) {
+  const contacts = await getContact(query, currentPage);
   return (
     <>
       <table className="w-full text-sm text-left text-gray-500">
@@ -22,10 +28,12 @@ export default async function ContactTable() {
               <td className="px-6 py-3">{index + 1}</td>
               <td className="px-6 py-3">{contact.name}</td>
               <td className="px-6 py-3">{contact.phoneNumber}</td>
-              <td className="px-6 py-3">{formatDate(contact.createdAt.toString())}</td>
+              <td className="px-6 py-3">
+                {formatDate(contact.createdAt.toString())}
+              </td>
               <td className="flex justify-center gap-1 py-3">
                 <EditButton id={contact.id} />
-                <DeleteButton />
+                <DeleteButton id={contact.id} />
               </td>
             </tr>
           ))}
