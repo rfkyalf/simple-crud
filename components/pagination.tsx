@@ -1,5 +1,6 @@
 "use client";
 
+import { generatePagination } from "@/lib/utils";
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -10,7 +11,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   const searchParams = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  const createPageURL = ({ pageNumber }: { pageNumber: string | number }) => {
+  const createPageURL = (pageNumber: string | number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", pageNumber.toString());
     return `${pathname}?${params.toString()}`;
@@ -34,7 +35,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       {
         "rounded-l-sm": position === "first" || position === "single",
         "rounded-r-sm": position === "last" || position === "single",
-        "z-10 bg-blue-100 border-blue-500 text-white": isActive,
+        "z-10 bg-blue-100 border-blue-500 text-gray-400": isActive,
         "hover:bg-gray-100": !isActive && position !== "middle",
         "text-gray-300 pointer-event-none": position === "middle",
       }
@@ -91,6 +92,33 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
           direction="left"
           href={createPageURL(currentPage - 1)}
           isDisable={currentPage <= 1}
+        />
+
+        <div className="flex -space-x-px">
+          {allPages.map((page, index) => {
+            let position: "first" | "last" | "single" | "middle" | undefined;
+
+            if (index === 0) position = "first";
+            if (index === allPages.length - 1) position = "last";
+            if (allPages.length === 1) position = "single";
+            if (page === "...") position = "middle";
+
+            return (
+              <PaginationNumber
+                key={index}
+                href={createPageURL(page)}
+                page={page}
+                position={position}
+                isActive={currentPage === page}
+              />
+            );
+          })}
+        </div>
+
+        <PaginationArrow
+          direction="right"
+          href={createPageURL(currentPage + 1)}
+          isDisable={currentPage >= totalPages}
         />
       </div>
     </>
